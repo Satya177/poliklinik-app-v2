@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('user', function (Blueprint $table) {
-            //
+        if (Schema::hasColumn('users', 'id_poli')) {
+            return;
+        }
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreignId('id_poli')->nullable()->after('role')->constrained('poli')->nullOnDelete();
         });
     }
 
@@ -21,8 +25,12 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('user', function (Blueprint $table) {
-            //
+        if (! Schema::hasColumn('users', 'id_poli')) {
+            return;
+        }
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropConstrainedForeignId('id_poli');
         });
     }
 };
